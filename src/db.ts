@@ -1,5 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 import * as FS from 'expo-file-system/legacy';
+import {PHOTO_RESTORE_SQL} from './backup';
 export type RecordData={id:string;date:string;time:string;counts:{current:number|null;fresh:number|null}[];skin:(number|null)[];locations:{region:string;type:number;count:number;note:string}[];marks:(number|null)[];scar:string;answers:Record<string,string>;usage:{productId:string;period:string;dose:string;region:string;reaction:string}[];note:string;skipped?:boolean;updatedAt:string};
 export type Photo={id:string;date:string;file:string;category:string;note:string;createdAt:string};
 export type Product={id:string;name:string;category:string;concentration:string;note:string;start:string;stop:string;frequency:string;region:string;deletedAt?:string};
@@ -32,7 +33,7 @@ export async function saveProduct(p:Product){await db.runAsync('INSERT OR REPLAC
 export async function deleteProduct(id:string){const row=await db.getFirstAsync<{data:string}>('SELECT data FROM products WHERE id=?',id);if(row){const product:Product=JSON.parse(row.data);await saveProduct({...product,deletedAt:product.deletedAt??new Date().toISOString()});}}
 export async function addPhoto(p:Photo){await db.runAsync('INSERT INTO photos VALUES (?,?,?,?)',p.id,p.date,p.file,JSON.stringify(p));}
 export async function updatePhoto(p:Photo){await db.runAsync('UPDATE photos SET data=? WHERE id=?',JSON.stringify(p),p.id);}
-export async function importData(b:{records:RecordData[];products:Product[];photos:Photo[];profile:string}){await db.withTransactionAsync(async()=>{for(const r of b.records)await saveRecord(r);for(const p of b.products)await saveProduct(p);for(const p of b.photos)await addPhoto(p);await setSetting('profile',b.profile);});}
+export async function importData(b:{records:RecordData[];products:Product[];photos:Photo[];profile:string}){await db.withTransactionAsync(async()=>{for(const r of b.records)await saveRecord(r);for(const p of b.products)await saveProduct(p);for(const p of b.photos)await db.runAsync(PHOTO_RESTORE_SQL,p.id,p.date,p.file,JSON.stringify(p));await setSetting('profile',b.profile);});}
 export async function deletePhoto(p:Photo){await db.runAsync('DELETE FROM photos WHERE id=?',p.id);await FS.deleteAsync(photoDir()+p.file,{idempotent:true});}
 export async function deleteRecord(date:string){await db.withTransactionAsync(async()=>{await db.runAsync('DELETE FROM daily WHERE date=?',date);await db.runAsync('DELETE FROM photos WHERE date=?',date);});/* orphan files retained until wipe to keep deletion crash safe */}
 export async function wipe(){await db.withTransactionAsync(async()=>{await db.execAsync('DELETE FROM daily;DELETE FROM photos;DELETE FROM products;DELETE FROM settings;');});await FS.deleteAsync(photoDir(),{idempotent:true});await FS.makeDirectoryAsync(photoDir(),{intermediates:true});}
