@@ -1,5 +1,5 @@
 export const types = ['红肿痘','脓包痘','小丘疹','闭口粉刺','黑头','囊肿或结节','其他'];
-export const regions = ['额头','眉间','左脸颊','右脸颊','鼻梁','鼻头','左鼻翼','右鼻翼','人中','下巴','其他'];
+export const regions = ['额头','眉间','左脸颊','右脸颊','鼻梁','鼻头','左鼻翼','右鼻翼','人中','下巴','下巴下方（颏下）','左下颌缘','右下颌缘','颈部','其他'];
 export const symptoms = ['出油','干燥','泛红','刺痛','瘙痒','脱皮','紧绷','敏感'];
 export function today(){ const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 export function dates(n,end=today()){const d=new Date(end+'T12:00:00'); return Array.from({length:n},(_,i)=>{const x=new Date(d);x.setDate(d.getDate()-n+1+i);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`;});}
