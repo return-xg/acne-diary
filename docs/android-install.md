@@ -32,3 +32,14 @@ SHA256：`0f7f517bec89d6339b35202e6ac1f440a33d843ec94b8bb9454c91bafffe2fb6`。
 另提供`dist/acne-diary-1.0.0-android-preview.zip`用于文件传输，解压后安装APK。二进制未提交Git，GitHub Actions产物保留30天，请另行保留下载文件。
 
 待用户确认：独立安装成功、JSON迁移、离线新建编辑/原图/趋势、手机重启保留数据。
+
+## 图标更新版1.0.1（2026-11-02）
+
+构建源码b596a42；构建记录：https://github.com/return-xg/acne-diary/actions/runs/41424241056 。12项测试及原生编译通过。
+
+APK：`dist/apk/acne-diary-1.0.1-arm64-preview.apk`（25.75 MiB）；文件SHA256：`7fe19a5b6fab16b8f8d3909be8497c25afcbca284cfa29af7133430e34b9ca32`。
+ZIP：`dist/acne-diary-1.0.1-android-preview.zip`。
+
+检查APK实际清单：包名com.personal.acnediary，versionName=1.0.1，versionCode=2；新旧APK签名证书SHA256均为`fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c`。包内已包含新图标的多密度资源，并抽取192px启动图标目视检查；ZIP CRC及文件校验通过，离线代码及ARM64库存在。
+
+可在1.0.0上覆盖安装，无需先卸载。安装前仍建议备份。桌面图标显示、覆盖后数据保留待用户真机确认；勿将构建检查等同于完成设备验收。
