@@ -1,6 +1,6 @@
 # 痘痘日记 · Acne Diary
 
-React Native 原生跨平台本地 MVP 源码。不是网页套壳。当前尚未完成真实手机验收，不能视为需求中全部功能交付。
+React Native 原生跨平台本地 MVP 源码。当前核心流程已通过小米17 Pro / Expo Go真机验收，独立APK安装与迁移仍需单独验收；完整需求中的后续功能见验收文档。
 
 开源仓库：[return-xg/acne-diary](https://github.com/return-xg/acne-diary)，采用 [MIT 许可证](LICENSE)。公开源码使用空白个人档案模板；手机里已经保存的档案不会受影响。不要向仓库提交个人照片、记录备份或凭据。
 
@@ -18,6 +18,10 @@ git push
 ```
 
 `git add`按实际修改的文件调整。多人协作或较大改动建议新建分支后提交 Pull Request。仓库凭据由 Git Credential Manager 管理，不要将令牌或密码写入远程URL。
+
+## Android 安装包
+
+独立测试APK的构建、安装、备份迁移及离线验收见 [Android 安装说明](docs/android-install.md)。工作流在 GitHub Actions 中手动触发；安装前保留Expo Go中的完整JSON备份。
 
 ## 运行
 

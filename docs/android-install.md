@@ -19,3 +19,16 @@ GitHub Actions → 构建 Android 测试安装包 → Run workflow。工作流�
 以后升级安装应直接覆盖安装，使用同一包名与签名；不要先卸载。正式签名与测试签名不同时Android无法原位覆盖，应先备份，再迁移。
 
 测试通过前不将APK标记为正式发布版；iOS不在本次安装验收范围内。
+
+## 首次构建结果（2026-11-02）
+
+源码提交：e17244d3883a55ff3f17c67136a67ad1bc04cea4。
+构建记录：https://github.com/return-xg/acne-diary/actions/runs/41420996373 。云端12项测试及Gradle assembleRelease通过。
+
+产物：`dist/apk/acne-diary-1.0.0-arm64-preview.apk`，25.63 MiB。
+SHA256：`0f7f517bec89d6339b35202e6ac1f440a33d843ec94b8bb9454c91bafffe2fb6`。
+本地检查：校验值一致、ZIP各条目CRC正常、包含AndroidManifest.xml、classes.dex、1,299,168字节内置运行代码、16个ARM64原生库。检查不代替手机安装与离线运行验收。
+
+另提供`dist/acne-diary-1.0.0-android-preview.zip`用于文件传输，解压后安装APK。二进制未提交Git，GitHub Actions产物保留30天，请另行保留下载文件。
+
+待用户确认：独立安装成功、JSON迁移、离线新建编辑/原图/趋势、手机重启保留数据。
