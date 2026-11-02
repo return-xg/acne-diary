@@ -20,3 +20,5 @@ SQLite acne.db，WAL、参数绑定；user_version=1。后续迁移必须依据u
 本机SQLite未启用SQLCipher。Android禁止系统备份；iOS设备备份由系统管理。无云端接口，无AI照片上传。导出JSON及原图是主动分享行为。
 
 后续实体：WeeklyAssessment、TreatmentPlan、TreatmentSchedule、Reminder 将使用独立表；当前尚未创建和假造数据。
+
+产品删除改为在Product JSON中设置deletedAt，保留同一ID及名称/属性；当前列表隐藏，归档入口可查历史。旧版本已物理删除的产品通过ProductUsage ID生成只读未知名称占位，未修改原记录。产品删除不改动daily数据。无需表结构迁移，已有JSON缺省deletedAt表示当前产品。

@@ -2,7 +2,7 @@ import * as SQLite from 'expo-sqlite';
 import * as FS from 'expo-file-system/legacy';
 export type RecordData={id:string;date:string;time:string;counts:{current:number|null;fresh:number|null}[];skin:(number|null)[];locations:{region:string;type:number;count:number;note:string}[];marks:(number|null)[];scar:string;answers:Record<string,string>;usage:{productId:string;period:string;dose:string;region:string;reaction:string}[];note:string;skipped?:boolean;updatedAt:string};
 export type Photo={id:string;date:string;file:string;category:string;note:string;createdAt:string};
-export type Product={id:string;name:string;category:string;concentration:string;note:string;start:string;stop:string;frequency:string;region:string};
+export type Product={id:string;name:string;category:string;concentration:string;note:string;start:string;stop:string;frequency:string;region:string;deletedAt?:string};
 export const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
 // Keep a single initialization promise across React Fast Refresh evaluations.
 // A full JS-runtime reload gets a new connection instead of a cached native handle.
@@ -29,7 +29,7 @@ export async function setSetting(key:string,v:any){await db.runAsync('INSERT OR 
 export async function all<T>(table:'daily'|'products'|'photos'):Promise<T[]>{return (await db.getAllAsync<{data:string}>(`SELECT data FROM ${table}`)).map(x=>JSON.parse(x.data));}
 export async function saveRecord(r:RecordData){await db.runAsync('INSERT INTO daily VALUES (?,?,?) ON CONFLICT(date) DO UPDATE SET data=excluded.data',r.id,r.date,JSON.stringify(r));}
 export async function saveProduct(p:Product){await db.runAsync('INSERT OR REPLACE INTO products VALUES (?,?)',p.id,JSON.stringify(p));}
-export async function deleteProduct(id:string){await db.runAsync('DELETE FROM products WHERE id=?',id);}
+export async function deleteProduct(id:string){const row=await db.getFirstAsync<{data:string}>('SELECT data FROM products WHERE id=?',id);if(row){const product:Product=JSON.parse(row.data);await saveProduct({...product,deletedAt:product.deletedAt??new Date().toISOString()});}}
 export async function addPhoto(p:Photo){await db.runAsync('INSERT INTO photos VALUES (?,?,?,?)',p.id,p.date,p.file,JSON.stringify(p));}
 export async function updatePhoto(p:Photo){await db.runAsync('UPDATE photos SET data=? WHERE id=?',JSON.stringify(p),p.id);}
 export async function importData(b:{records:RecordData[];products:Product[];photos:Photo[];profile:string}){await db.withTransactionAsync(async()=>{for(const r of b.records)await saveRecord(r);for(const p of b.products)await saveProduct(p);for(const p of b.photos)await addPhoto(p);await setSetting('profile',b.profile);});}

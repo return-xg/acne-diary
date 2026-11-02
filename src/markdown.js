@@ -13,14 +13,14 @@ const table = (headers, rows) => [headers, headers.map(()=>'---'), ...rows]
  */
 export function toMarkdown({profile, records, products, photos}) {
   const ordered = [...records].sort((a,b)=>a.date.localeCompare(b.date));
-  const productName = id => products.find(p=>p.id===id)?.name ?? `已删除产品（ID：${id}）`;
+  const productName = id => {const p=products.find(p=>p.id===id);return p ? p.name+(p.deletedAt?'（已删除）':'') : `已删除产品（ID：${id}）`;};
   const out = ['# 痘痘日记 · 个人皮肤记录',
     '> 分析说明：以下为用户自述和观察记录，不是医学诊断。请依据实际数据分析趋势，指出数据缺口，区分时间关联与因果，不要据此自动开药或提高用药频率。',
     '## 数据口径',
     '- 当前存量与当日新增分别填写，不能用存量差值推算新增。\n- “未评估 / 未填写”不是0；0表示明确记录为零。\n- 症状评分：1无、2轻微、3轻度、4中度、5明显；整体皮肤状态为独立主观评价。\n- 部位观察不自动累加为全脸计数。标记未记录的日期不参与趋势统计。\n- 未列出的日期表示没有主记录，不代表没有痘痘。\n- 本文本不包含照片文件、Base64或私有文件路径；如需分析照片请自行选择分享。',
     `记录范围：${ordered.length ? ordered[0].date+' 至 '+ordered.at(-1).date : '暂无记录'}；主记录 ${ordered.length} 条；标记未记录 ${ordered.filter(r=>r.skipped).length} 天。`,
     '## 个人皮肤档案', cell(profile), '## 产品档案'];
-  out.push(products.length ? table(['产品','分类','浓度','开始日期','停止日期','计划频率（备注）','部位','说明'], products.map(p=>[p.name,p.category,p.concentration,p.start,p.stop,p.frequency,p.region,p.note])) : '暂无产品档案。');
+  out.push(products.length ? table(['产品','状态','分类','浓度','开始日期','停止日期','计划频率（备注）','部位','说明'], products.map(p=>[p.name,p.deletedAt?'已删除（保留历史）':'当前产品',p.category,p.concentration,p.start,p.stop,p.frequency,p.region,p.note])) : '暂无产品档案。');
   out.push('## 每日记录（日期正序）');
   if (!ordered.length) out.push('暂无每日记录。');
   for (const r of ordered) {
