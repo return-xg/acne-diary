@@ -18,7 +18,34 @@ function Btn({label,onPress,quiet=false,disabled=false}:any){return <Pressable a
 function Choices({values,value,onChange}:any){return <View style={s.wrap}>{values.map((v:string)=><Pressable key={v} onPress={()=>onChange(v===value?'':v)} style={[s.chip,value===v&&s.selected]}><Text style={{color:value===v?'white':'#476157'}}>{v}</Text></Pressable>)}</View>}
 function Input({value,onChange,placeholder,multiline=false}:any){return <TextInput accessibilityLabel={placeholder} style={[s.input,multiline&&{minHeight:95}]} value={value} onChangeText={onChange} placeholder={placeholder} placeholderTextColor="#849187" multiline={multiline}/>}
 function NumberField({value,onChange}:any){return <View style={s.number}><Pressable accessibilityLabel="减少" onPress={()=>onChange(Math.max(0,(value??0)-1))}><Text style={s.operator}>−</Text></Pressable><TextInput style={s.numInput} keyboardType="number-pad" value={value===null?'':String(value)} placeholder="—" onChangeText={t=>{if(/^\d{0,4}$/.test(t))onChange(t===''?null:Number(t));}}/><Pressable accessibilityLabel="增加" onPress={()=>onChange(Math.min(9999,(value??0)+1))}><Text style={s.operator}>+</Text></Pressable></View>}
-function Chart({data,title,onSelect}:any){const max=Math.max(1,...data.map((d:any)=>d.value??0));return <View style={s.card}><Text style={s.h3}>{title}</Text><Text style={s.muted}>点击柱条查看日期 · 灰点代表未评估</Text><Svg width="100%" height={140} viewBox={`0 0 ${Math.max(300,data.length*22)} 140`}>{data.map((d:any,i:number)=>{const w=Math.max(300,data.length*22)/data.length;return <React.Fragment key={d.date}><Rect x={i*w+3} y={d.value===null?116:116-d.value/max*94} width={Math.max(3,w-6)} height={d.value===null?3:Math.max(2,d.value/max*94)} rx={3} fill={d.value===null?'#B8C0B8':'#527862'} onPress={()=>onSelect(`${d.date}：${show(d.value)}`)}/>{(i===0||i===data.length-1)&&<SvgText x={i*w} y={138} fontSize={9} fill="#67756B">{d.date.slice(5)}</SvgText>}</React.Fragment>})}</Svg></View>}
+function Chart({data,title}: {data:{date:string;value:number|null}[];title:string;onSelect?:any}){
+ const [selectedDate,setSelectedDate]=useState<string|null>(null),[width,setWidth]=useState(280);
+ useEffect(()=>setSelectedDate(null),[title,data.length]);
+ const max=Math.max(1,...data.map(d=>d.value??0));
+ const columnWidth=Math.max(44,width/Math.max(1,data.length));
+ const selected=data.find(d=>d.date===selectedDate);
+ const unit=title.includes('刺痛')?'分':'颗';
+ return <View style={s.card} onLayout={e=>setWidth(Math.max(1,e.nativeEvent.layout.width-36))}>
+  <Text style={s.h3}>{title}</Text>
+  <Text style={s.muted}>点击日期或柱条查看详情 · 灰线表示未评估</Text>
+  <ScrollView horizontal showsHorizontalScrollIndicator={data.length>7} nestedScrollEnabled>
+   <View style={{flexDirection:'row',paddingTop:8}}>{data.map(d=>{
+    const active=selectedDate===d.date;
+    return <Pressable key={d.date} accessibilityRole="button" accessibilityLabel={`${d.date}，${d.value===null?'暂无数据':d.value+unit}`} accessibilityState={{selected:active}} onPress={()=>setSelectedDate(d.date)} style={{width:columnWidth,paddingHorizontal:4,paddingTop:6,paddingBottom:8,borderRadius:10,backgroundColor:active?'#EDF3E7':'transparent'}}>
+     <View style={{height:122,justifyContent:'flex-end',alignItems:'center'}}>
+      <Text style={{fontSize:11,color:'#355F4E',marginBottom:4}}>{d.value===null?'—':d.value}</Text>
+      <View style={{width:'70%',height:d.value===null?3:Math.max(3,d.value/max*94),borderRadius:4,backgroundColor:d.value===null?'#B8C0B8':active?'#244D43':'#527862'}}/>
+     </View>
+     <Text style={{fontSize:10,textAlign:'center',marginTop:10,color:active?'#244D43':'#67756B'}}>{d.date.slice(5)}</Text>
+    </Pressable>
+   })}</View>
+  </ScrollView>
+  {data.length>7&&<Text style={s.muted}>左右滑动查看其他日期</Text>}
+  <View accessibilityLiveRegion="polite" style={{padding:12,backgroundColor:'#F2F5ED',borderRadius:12}}>
+   <Text style={s.body}>{selected?`${selected.date}　${selected.value===null?'暂无数据（未评估）':selected.value+' '+unit}`:'点选一个日期，在这里查看具体数值'}</Text>
+  </View>
+ </View>
+}
 export default function App(){return <SafeAreaProvider><Diary/></SafeAreaProvider>}
 function Diary(){
  const [ready,setReady]=useState(false),[error,setError]=useState(''),[tab,setTab]=useState('首页'),[records,setRecords]=useState<D.RecordData[]>([]),[products,setProducts]=useState<D.Product[]>([]),[photos,setPhotos]=useState<D.Photo[]>([]),[record,setRecord]=useState(blank()),[profile,setProfile]=useState(initialProfile),[profileDone,setProfileDone]=useState(false),[busy,setBusy]=useState(false),[range,setRange]=useState(7),[metric,setMetric]=useState(0),[category,setCategory]=useState('正面'),[selected,setSelected]=useState<D.Photo[]>([]),[viewPhoto,setViewPhoto]=useState<D.Photo|null>(null),[slider,setSlider]=useState(50),[product,setProduct]=useState<D.Product|null>(null),[region,setRegion]=useState('额头'),[locationType,setLocationType]=useState(0),[locationCount,setLocationCount]=useState<number|null>(null),[locationNote,setLocationNote]=useState(''),[notice,setNotice]=useState(''),[compareWidth,setCompareWidth]=useState(300),[mode,setMode]=useState('并排'),[savedDate,setSavedDate]=useState<string|null>(null),[recordEditor,setRecordEditor]=useState(false),[datePicker,setDatePicker]=useState<'new'|'change'|null>(null),[pickerDate,setPickerDate]=useState(new Date()),[baseline,setBaseline]=useState('');
