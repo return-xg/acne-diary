@@ -41,7 +41,7 @@ jobs:
       - name: 整理安装包与校验值
         run: |
           mkdir -p apk
-          cp android/app/build/outputs/apk/release/app-release.apk apk/acne-diary-1.0.0-arm64-preview.apk
+          cp android/app/build/outputs/apk/release/app-release.apk apk/acne-diary-1.0.1-arm64-preview.apk
           cd apk
           sha256sum *.apk > SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
