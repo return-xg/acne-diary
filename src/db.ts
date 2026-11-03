@@ -1,6 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 import * as FS from 'expo-file-system/legacy';
 import {PHOTO_RESTORE_SQL} from './backup';
+import {saveEditedRecordInTransaction} from './record-date';
 export type RecordData={id:string;date:string;time:string;counts:{current:number|null;fresh:number|null}[];countTypes?:number[];skin:(number|null)[];locations:{region:string;type:number;count:number;note:string}[];marks:(number|null)[];scar:string;answers:Record<string,string>;usage:{productId:string;period:string;dose:string;region:string;reaction:string}[];note:string;skipped?:boolean;updatedAt:string};
 export type Photo={id:string;date:string;file:string;category:string;note:string;createdAt:string};
 export type Product={id:string;name:string;category:string;concentration:string;note:string;start:string;stop:string;frequency:string;region:string;deletedAt?:string};
@@ -29,6 +30,7 @@ export async function setting(key:string){const r=await db.getFirstAsync<{data:s
 export async function setSetting(key:string,v:any){await db.runAsync('INSERT OR REPLACE INTO settings VALUES (?,?)',key,JSON.stringify(v));}
 export async function all<T>(table:'daily'|'products'|'photos'):Promise<T[]>{return (await db.getAllAsync<{data:string}>(`SELECT data FROM ${table}`)).map(x=>JSON.parse(x.data));}
 export async function saveRecord(r:RecordData){await db.runAsync('INSERT INTO daily VALUES (?,?,?) ON CONFLICT(date) DO UPDATE SET data=excluded.data',r.id,r.date,JSON.stringify(r));}
+export async function saveEditedRecord(r:RecordData,previousDate:string|null){await db.withExclusiveTransactionAsync(async tx=>{await saveEditedRecordInTransaction(tx,r,previousDate);});}
 export async function saveProduct(p:Product){await db.runAsync('INSERT OR REPLACE INTO products VALUES (?,?)',p.id,JSON.stringify(p));}
 export async function deleteProduct(id:string){const row=await db.getFirstAsync<{data:string}>('SELECT data FROM products WHERE id=?',id);if(row){const product:Product=JSON.parse(row.data);await saveProduct({...product,deletedAt:product.deletedAt??new Date().toISOString()});}}
 export async function addPhoto(p:Photo){await db.runAsync('INSERT INTO photos VALUES (?,?,?,?)',p.id,p.date,p.file,JSON.stringify(p));}
