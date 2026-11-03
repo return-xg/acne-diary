@@ -29,5 +29,5 @@ test('原生文字检查包含Fragment间的单行空格，并允许Text中的�
  assert.deepEqual(rawNativeText('const x=<View>\n<View/><Text><>正常文字 </></Text>\n</View>'),[]);
 });
 test('App界面没有落在Text外的直接文字或空格',()=>{
- for(const file of ['../App.tsx','../src/DateFilter.tsx'])assert.deepEqual(rawNativeText(readFileSync(new URL(file,import.meta.url),'utf8')),[],file);
+ for(const file of ['../App.tsx','../src/DateFilter.tsx','../src/PhotoComparison.tsx'])assert.deepEqual(rawNativeText(readFileSync(new URL(file,import.meta.url),'utf8')),[],file);
 });
