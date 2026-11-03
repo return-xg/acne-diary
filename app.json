@@ -2,7 +2,7 @@
   "expo": {
     "name": "痘痘日记",
     "slug": "acne-diary",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -12,13 +12,13 @@
         "NSCameraUsageDescription": "拍摄皮肤记录照片",
         "NSPhotoLibraryUsageDescription": "选择皮肤记录照片"
       },
-      "buildNumber": "2"
+      "buildNumber": "3"
     },
     "android": {
       "package": "com.personal.acnediary",
       "permissions": [],
       "allowBackup": false,
-      "versionCode": 2,
+      "versionCode": 3,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon-foreground.png",
         "backgroundColor": "#244D43"
