@@ -1,5 +1,5 @@
 import React,{memo,useEffect,useRef,useState} from 'react';
-import {Animated,Image,PanResponder,StyleSheet,Text,View} from 'react-native';
+import {Animated,Image,PanResponder,StyleSheet,View} from 'react-native';
 
 type Props={before:string;after:string;onDraggingChange:(dragging:boolean)=>void};
 function PhotoComparison({before,after,onDraggingChange}:Props){
@@ -38,10 +38,8 @@ function PhotoComparison({before,after,onDraggingChange}:Props){
   <Animated.View pointerEvents="none" style={[s.clip,{width:position}]}>
    <Image style={{width,height:320}} resizeMode="contain" source={{uri:before}}/>
   </Animated.View>
-  <Animated.View pointerEvents="none" style={[s.divider,{transform:[{translateX:Animated.subtract(position,1)}]}]}>
-   <View style={s.handle}><Text style={s.arrows}>‹ ›</Text></View>
-  </Animated.View>
+  <Animated.View pointerEvents="none" style={[s.divider,{transform:[{translateX:Animated.subtract(position,1)}]}]}/>
  </View>;
 }
 export default memo(PhotoComparison);
-const s=StyleSheet.create({surface:{height:320,backgroundColor:'#DADED5',overflow:'hidden',borderRadius:12},clip:{position:'absolute',left:0,top:0,height:320,overflow:'hidden'},divider:{position:'absolute',left:0,top:0,bottom:0,width:2,backgroundColor:'#FFFFFF',justifyContent:'center',alignItems:'center'},handle:{width:36,height:36,borderRadius:18,backgroundColor:'#244D43',borderWidth:2,borderColor:'#FFFFFF',alignItems:'center',justifyContent:'center'},arrows:{color:'#FFFFFF',fontSize:20,lineHeight:24,includeFontPadding:false}});
+const s=StyleSheet.create({surface:{height:320,backgroundColor:'#DADED5',overflow:'hidden',borderRadius:12},clip:{position:'absolute',left:0,top:0,height:320,overflow:'hidden'},divider:{position:'absolute',left:0,top:0,bottom:0,width:2,backgroundColor:'#FFFFFF'}});
