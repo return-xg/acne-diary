@@ -1,7 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 import * as FS from 'expo-file-system/legacy';
 import {PHOTO_RESTORE_SQL} from './backup';
-export type RecordData={id:string;date:string;time:string;counts:{current:number|null;fresh:number|null}[];skin:(number|null)[];locations:{region:string;type:number;count:number;note:string}[];marks:(number|null)[];scar:string;answers:Record<string,string>;usage:{productId:string;period:string;dose:string;region:string;reaction:string}[];note:string;skipped?:boolean;updatedAt:string};
+export type RecordData={id:string;date:string;time:string;counts:{current:number|null;fresh:number|null}[];countTypes?:number[];skin:(number|null)[];locations:{region:string;type:number;count:number;note:string}[];marks:(number|null)[];scar:string;answers:Record<string,string>;usage:{productId:string;period:string;dose:string;region:string;reaction:string}[];note:string;skipped?:boolean;updatedAt:string};
 export type Photo={id:string;date:string;file:string;category:string;note:string;createdAt:string};
 export type Product={id:string;name:string;category:string;concentration:string;note:string;start:string;stop:string;frequency:string;region:string;deletedAt?:string};
 export const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
