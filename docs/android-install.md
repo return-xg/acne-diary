@@ -43,3 +43,20 @@ ZIP：`dist/acne-diary-1.0.1-android-preview.zip`。
 检查APK实际清单：包名com.personal.acnediary，versionName=1.0.1，versionCode=2；新旧APK签名证书SHA256均为`fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c`。包内已包含新图标的多密度资源，并抽取192px启动图标目视检查；ZIP CRC及文件校验通过，离线代码及ARM64库存在。
 
 可在1.0.0上覆盖安装，无需先卸载。安装前仍建议备份。桌面图标显示、覆盖后数据保留待用户真机确认；勿将构建检查等同于完成设备验收。
+
+
+## 1.0.2 界面与记录优化（2026-11-03）
+
+构建源码32d688b；构建记录：https://github.com/return-xg/acne-diary/actions/runs/41616576622 。
+本版包括：按需添加计数类型、折叠选填项目、档案和产品只读详情/显式编辑、日期单日与区间筛选、20条分批显示、已有记录改期并同步照片、圆形悬浮新增按钮，以及更流畅且仅显示细分界线的照片滑动对比。
+
+本轮云端第一次构建因应用版本替换误改依赖锁失败；32d688b已恢复全部原依赖锁版本，仅保留应用根版本1.0.2。第二次构建重新通过安装和验证阶段。
+
+仍属于本地MVP：完整自然周/月报、自定义问卷、治疗计划、本地提醒、Excel/PDF、云同步和AI照片分析尚未实现。Markdown仍为文本导出，不内嵌照片原图；完整JSON备份包含原图。
+
+安装后需在小米17 Pro复测：覆盖安装保留数据（如有旧独立版）、从Expo Go导入JSON、断网退出重开、记录改期后的照片关联和滑动对比。构建检查不代替这些真机验收。
+
+
+1.0.2构建已成功：云端21项测试、类型检查、原生编译通过。APK 25.77 MiB，versionName=1.0.2、versionCode=3、包名com.personal.acnediary。SHA256：68e9e8e8127a0d2098f0f1ff8bc32ed4bc5eacbc88dae0a9ce84ec7005422ec5。
+本地ZIP CRC校验通过，包含1,320,212字节内置运行代码和16个ARM64原生库。签名证书与1.0.1一致，支持覆盖安装，数据保留待用户真机确认。
+产物：dist/apk/acne-diary-1.0.2-arm64-preview.apk；传输包：dist/acne-diary-1.0.2-android-preview.zip。
